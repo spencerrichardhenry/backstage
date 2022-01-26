@@ -36,6 +36,7 @@ export function createGithubActionsDispatchAction(options: {
     repoUrl: string;
     workflowId: string;
     branchOrTagName: string;
+    token?: string;
   }>({
     id: 'github:actions:dispatch',
     description:
@@ -61,17 +62,30 @@ export function createGithubActionsDispatchAction(options: {
               'The git branch or tag name used to dispatch the workflow',
             type: 'string',
           },
+          token: {
+            title: 'Authentication Token',
+            type: 'string',
+            description: 'The GITHUB_TOKEN to use for authorization to GitHub',
+          },
         },
       },
     },
     async handler(ctx) {
-      const { repoUrl, workflowId, branchOrTagName } = ctx.input;
+      const {
+        repoUrl,
+        workflowId,
+        branchOrTagName,
+        token: providedToken,
+      } = ctx.input;
 
       ctx.logger.info(
         `Dispatching workflow ${workflowId} for repo ${repoUrl} on ${branchOrTagName}`,
       );
 
-      const { client, owner, repo } = await octokitProvider.getOctokit(repoUrl);
+      const { client, owner, repo } = await octokitProvider.getOctokit(
+        repoUrl,
+        { token: providedToken },
+      );
 
       await client.rest.actions.createWorkflowDispatch({
         owner,
