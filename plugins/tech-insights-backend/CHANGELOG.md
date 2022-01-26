@@ -1,5 +1,11 @@
 # @backstage/plugin-tech-insights-backend
 
+## 0.2.2
+
+### Patch Changes
+
+- bbb6622752: Update README to match config options.
+
 ## 0.2.1
 
 ### Patch Changes
